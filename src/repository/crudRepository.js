@@ -1,3 +1,4 @@
+import AppError from "../utils/errors/AppError.js";
 class CrudRepository {
   constructor(model) {
     this.model = model;
@@ -19,7 +20,7 @@ class CrudRepository {
     try {
       const response = await this.model.findByIdAndDelete(id);
       if (!response) {
-        throw new AppError("Resource not found", StatusCodes.NOT_FOUND);
+        throw new AppError("Resource not found", 404);
       }
       return response;
     } catch (error) {
@@ -33,7 +34,7 @@ class CrudRepository {
     try {
       const response = await this.model.findById(id);
       if (!response) {
-        throw new AppError("Resource not found", StatusCodes.NOT_FOUND);
+        throw new AppError("Resource not found", 404);
       }
       return response;
     } catch (error) {
@@ -61,7 +62,7 @@ class CrudRepository {
         runValidators: true, // Ensure validation is run
       });
       if (!response) {
-        throw new AppError("Resource not found", StatusCodes.NOT_FOUND);
+        throw new AppError("Resource not found", 404);
       }
       return response;
     } catch (error) {

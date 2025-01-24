@@ -11,5 +11,7 @@ router.post("/", upload.single("image"), PostController.CreatePost);
 
 router.get("/", PostController.FindAllPost);
 router.get("/:id", PostController.FindPost);
+router.delete("/:id", PostController.deletePost);
+router.patch("/:id", upload.single("image"), PostController.UpdatePost);
 
 export default router;

@@ -14,6 +14,31 @@ class PostRepository extends CrudRepository {
       throw error;
     }
   }
+  async countAllPost() {
+    try {
+      const count = await this.model
+        .find()
+        .sort({ createdAt: -1 })
+        .countDocuments();
+      return count;
+    } catch (error) {
+      console.error("Error in countPost:", error);
+      throw error;
+    }
+  }
+  async sortPost(offset, limit, sortOption) {
+    try {
+      const sort = await this.model
+        .find() // Get all posts
+        .sort(sortOption) // Sort by the provided option
+        .skip(offset) // Apply offset for pagination
+        .limit(limit); // Apply limit for pagination
+      return sort;
+    } catch (error) {
+      console.error("Error in getAll:", error);
+      throw error;
+    }
+  }
 }
 
 export default PostRepository;

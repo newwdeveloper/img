@@ -21,6 +21,10 @@ export async function findAllPost() {
 export async function findPostById(id) {
   try {
     const post = await Post.findOne({ id });
+    if (!post) {
+      // Throwing custom AppError if post is not found
+      throw new AppError("Post not found", 404);
+    }
     return post;
   } catch (error) {
     console.log(error);

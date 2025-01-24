@@ -1,4 +1,5 @@
 import { PostRepository } from "../repository/index.js";
+import AppError from "../utils/errors/AppError.js";
 
 const postRepository = new PostRepository();
 
@@ -17,6 +18,9 @@ async function CreatePost(data) {
 async function FindPostById(id) {
   try {
     const response = await postRepository.get(id); // Correct: 'get' matches CrudRepository
+    if (!response) {
+      throw new AppError("Post not found", 404);
+    }
     return response;
   } catch (error) {
     console.error("Error in FindPostById:", error);
@@ -24,10 +28,13 @@ async function FindPostById(id) {
   }
 }
 
-async function FindAll() {
+async function FindAll(offset, limit) {
   try {
-    const response = await postRepository.getAll(); // Correct: 'getAll' matches CrudRepository
-    return response;
+    const sortOption = { createdAt: -1 };
+    const response = await postRepository.sortPost(offset, limit, sortOption); // Correct: 'getAll' matches CrudRepository
+    const totalDocuments = await postRepository.countAllPost();
+    const totalPages = Math.ceil(totalDocuments / limit);
+    return { response, totalDocuments, totalPages };
   } catch (error) {
     console.error("Error in FindAll:", error);
     throw error;
@@ -44,4 +51,14 @@ async function DeletePost(id) {
   }
 }
 
-export default { CreatePost, FindPostById, FindAll, DeletePost };
+async function UpdatePost(id, data) {
+  try {
+    const update = await postRepository.update(id, data);
+    return update;
+  } catch (error) {
+    console.error("Error in DeletePost:", error);
+    throw error;
+  }
+}
+
+export default { CreatePost, FindPostById, FindAll, DeletePost, UpdatePost };
