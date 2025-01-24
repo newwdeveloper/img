@@ -1,4 +1,4 @@
-import { ImageService } from "../service/index.js"; // Import the image upload service
+import { ImageService, PostService } from "../service/index.js"; // Import the image upload service
 
 // Async function to handle image upload
 

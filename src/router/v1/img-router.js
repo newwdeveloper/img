@@ -1,4 +1,4 @@
-// routes/imageRoutes.js
+/*// routes/imageRoutes.js
 import express from "express";
 import multer from "multer";
 import { storage } from "../../config/cloudConfig.js";
@@ -10,4 +10,4 @@ const upload = multer({ storage });
 // POST route to handle image upload
 router.post("/upload", upload.single("image"), ImageController.UploadImage);
 
-export default router;
+export default router;*/

@@ -4,7 +4,9 @@ const postRepository = new PostRepository();
 
 async function CreatePost(data) {
   try {
+    console.log("Post data being created:", data);
     const post = await postRepository.create(data); // Using 'create' from CrudRepository
+    console.log("Post created:", post);
     return post;
   } catch (error) {
     console.error("Error in CreatePost:", error);
