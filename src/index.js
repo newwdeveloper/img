@@ -3,6 +3,7 @@ import connectDB from "./config/dbConfig.js";
 const app = express();
 import apiRoutes from "./router/index.js";
 import PORT from "./config/portConfig.js";
+import errorHandler from "./middleware/eerorMiddleware.js";
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -20,3 +21,7 @@ app.listen(PORT, () => {
   console.log(`server started at the port :${PORT}`);
   connectDB();
 });
+
+// Use the error-handling middleware
+
+app.use(errorHandler);

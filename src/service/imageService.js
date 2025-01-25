@@ -9,6 +9,7 @@ async function UploadImg(file) {
     console.log("Image upload result:", img);
     return img;
   } catch (error) {
+    console.error("Cloudinary upload error:", error);
     throw new Error("Image upload failed: " + error.message);
   }
 }

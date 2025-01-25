@@ -12,9 +12,18 @@ cloudinary.config({
 
 const storage = new CloudinaryStorage({
   cloudinary,
-  params: {
-    folder: "uploads", // Folder name in Cloudinary
-    allowed_formats: ["jpg", "png", "jpeg", "pdf"], // Allowed file types},
+  params: async (req, file) => {
+    const allowedFormats = ["jpg", "png", "jpeg", "webp"]; // Allowed file types
+    const fileFormat = file.mimetype.split("/")[1]; // Extract file extension
+
+    if (!allowedFormats.includes(fileFormat)) {
+      throw new Error("File type not supported"); // Throw error for unsupported files
+    }
+
+    return {
+      folder: "uploads", // Folder name in Cloudinary
+      allowed_formats: allowedFormats, // Enforce allowed formats in Cloudinary
+    };
   },
 });
 
