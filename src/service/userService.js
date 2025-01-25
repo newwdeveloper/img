@@ -5,15 +5,6 @@ const userRepository = new UserRepository();
 /**
  * Create a new user
  */
-async function createUser(data) {
-  try {
-    const user = await userRepository.create(data);
-    return user;
-  } catch (error) {
-    console.error("Error in createUser:", error);
-    throw error;
-  }
-}
 
 /**
  * Find a user by ID
@@ -67,8 +58,28 @@ async function deleteUser(id) {
   }
 }
 
+export const signupUserService = async (user) => {
+  try {
+    const newUser = await userRepository.create(user);
+    console.log(newUser);
+    return newUser;
+  } catch (error) {
+    if (error.code === 11000) {
+      const duplicateField = Object.keys(error.keyValue)[0]; // Get the field that was duplicated (either 'userName' or 'email')
+      const errorMessage = `${duplicateField} is already taken. Please choose another.`;
+      throw new Error(errorMessage);
+    }
+    if (error.name === "ValidationError") {
+      throw error; // Let the controller handle the validation errors
+    } else {
+      console.error(error);
+      throw new Error("Server error");
+    }
+  }
+};
+
 export default {
-  createUser,
+  signupUserService,
   findUserById,
   findAllUsers,
   findUserByEmail,

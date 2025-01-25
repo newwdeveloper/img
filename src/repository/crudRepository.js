@@ -47,6 +47,7 @@ class CrudRepository {
   async getAll() {
     try {
       const response = await this.model.find();
+      console.log("Fetched users:", response);
       return response;
     } catch (error) {
       console.log(error);
