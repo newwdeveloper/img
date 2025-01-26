@@ -7,7 +7,9 @@ class UserRepository extends CrudRepository {
   }
   async findUserByEmail(email) {
     try {
+      console.log("Finding user with email:", email);
       const user = await this.model.findOne({ email }); // Use `this.model` instead of `this.post`
+
       return user;
     } catch (error) {
       console.error("Error in findByEmail:", error);

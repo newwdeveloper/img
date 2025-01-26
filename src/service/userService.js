@@ -1,5 +1,6 @@
 import { UserRepository } from "../repository/index.js";
-
+import bcrypt from "bcrypt";
+import { generateJWTTocken } from "../utils/jwt.js";
 const userRepository = new UserRepository();
 
 /**
@@ -38,6 +39,7 @@ async function findAllUsers() {
 async function findUserByEmail(email) {
   try {
     const user = await userRepository.findUserByEmail(email);
+    console.log("Looking for user with email:", email);
     return user;
   } catch (error) {
     console.error("Error in findUserByEmail:", error);
@@ -77,9 +79,43 @@ export const signupUserService = async (user) => {
     }
   }
 };
+export const signinUser = async (userDetail) => {
+  try {
+    //1 check is there valid registered user with email
+    const user = await userRepository.findUserByEmail(userDetail.email);
+    if (!user) {
+      throw {
+        status: 404,
+        message: "User not found",
+      };
+    }
+    //2.compare the password
+    const isPasswordValid = bcrypt.compareSync(
+      userDetail.password,
+      user.password
+    );
+    if (!isPasswordValid) {
+      throw {
+        status: 401,
+        message: "invalid Password",
+      };
+    }
+    const tocken = generateJWTTocken({
+      email: user.email,
+      password: user.password,
+      _id: user._id,
+      userName: user.userName,
+    });
+    return tocken;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
 
 export default {
   signupUserService,
+  signinUser,
   findUserById,
   findAllUsers,
   findUserByEmail,

@@ -3,7 +3,8 @@ import { signupUserService } from "../service/userService.js";
 
 async function FindUserByEmail(req, res) {
   try {
-    const user = await UserService.findUserByEmail(req.body.email);
+    const email = req.body.email;
+    const user = await UserService.findUserByEmail(email);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -71,8 +72,32 @@ const signupUser = async (req, res) => {
   }
 };
 
+async function signinUser(req, res) {
+  try {
+    const response = await UserService.signinUser(req.body);
+    return res.status(200).json({
+      success: true,
+      message: "User sign-in successfully",
+      data: response,
+    });
+  } catch (error) {
+    console.log(error);
+    if (error.status) {
+      return res.status(error.status).json({
+        success: false,
+        message: error.message,
+      });
+    }
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Failure",
+    });
+  }
+}
+
 export default {
   FindUserByEmail,
   FindAllUser,
   signupUser,
+  signinUser,
 };
